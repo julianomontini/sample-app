@@ -4,7 +4,6 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                git credentialsId: 'github', url: 'https://github.com/julianomontini/sample-app.git'
                 sh label: 'Install npm dependencies', script: 'npm install'
             }
         }
