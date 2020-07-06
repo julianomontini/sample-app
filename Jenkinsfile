@@ -28,8 +28,10 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'gcp_service_account_staging', variable: 'SA_KEY')]) {
                     configFileProvider([configFile(fileId: 'app_config_testing', targetLocation: 'app.yaml')]) {
-                        sh label: 'Activate service account', script: 'gcloud auth activate-service-account --key-file=$SA_KEY --project jenkins-testing-282513'
-                        sh label: 'Deploy APP', script: 'gcloud app deploy'   
+                        lock('GCP_CLI'){
+                          sh label: 'Activate service account', script: 'gcloud auth activate-service-account --key-file=$SA_KEY --project jenkins-testing-282513'
+                          sh label: 'Deploy APP', script: 'gcloud app deploy'   
+                        }
                     }
                 }
             }
@@ -44,8 +46,10 @@ pipeline {
                 milestone(2)
                 withCredentials([file(credentialsId: 'gcp_service_account_production', variable: 'SA_KEY_PROD')]) {
                     configFileProvider([configFile(fileId: 'app_config_production', targetLocation: 'app.yaml')]) {
-                        sh label: 'Activate service account', script: 'gcloud auth activate-service-account --key-file=$SA_KEY_PROD --project jenkins-production-282520'
-                        sh label: 'Deploy APP', script: 'gcloud app deploy'   
+                        lock('GCP_CLI'){
+                          sh label: 'Activate service account', script: 'gcloud auth activate-service-account --key-file=$SA_KEY_PROD --project jenkins-production-282520'
+                          sh label: 'Deploy APP', script: 'gcloud app deploy'   
+                        }
                     }
                 }
             }
