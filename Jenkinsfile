@@ -42,9 +42,9 @@ pipeline {
                 milestone(1)
                 input message: "Do you REALLY want to deploy to production?"
                 milestone(2)
-                withCredentials([file(credentialsId: 'gcp_service_account_production', variable: 'SA_KEY')]) {
+                withCredentials([file(credentialsId: 'gcp_service_account_production', variable: 'SA_KEY_PROD')]) {
                     configFileProvider([configFile(fileId: 'app_config_production', targetLocation: 'app.yaml')]) {
-                        sh label: 'Activate service account', script: 'gcloud auth activate-service-account --key-file=$SA_KEY'
+                        sh label: 'Activate service account', script: 'gcloud auth activate-service-account --key-file=$SA_KEY_PROD'
                         sh label: 'Deploy APP', script: 'gcloud app deploy'   
                     }
                 }
